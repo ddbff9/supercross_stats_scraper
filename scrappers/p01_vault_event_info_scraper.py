@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup
 from ..private.sql_server import *
 import requests
 import pymysql
-from p00_general_functions import *
+from scrappers import p00_general_functions
 from dataclasses import dataclass
 
 """
@@ -46,7 +46,7 @@ def storeEventInfo(startYear, endYear, type):
             type_ = event['Type']
             name = event['Event']
             venue = event['Venue']
-            date = convertDate(event['Date'])
+            date = p00_general_functions.convertDate(event['Date'])
             city = event['City'].lstrip()
             state = event['State']
 
@@ -172,7 +172,7 @@ def extractEventDetails(year, type):
         event_date = html_event_details.contents[0]
 
         # Generate the primary key for the event based off the date:
-        event_PK = genPrimaryKey(event_date)
+        event_PK = p00_general_functions.genPrimaryKey(event_date)
 
         # Split event location into list of venue, city, and state:
         event_location = html_event_details.contents[2].split(',')
