@@ -1,4 +1,5 @@
 from bs4 import BeautifulSoup
+from ..private.sql_server import *
 import requests
 import pymysql
 from p00_general_functions import *
@@ -14,12 +15,11 @@ The objective is to create a SQL Table with the eventID, raceID, and eventHref f
 # ****** SQL Server Settings ******
 # *********************************
 
-
-host_ = '50.87.249.222'
-port_ = int(3306)
-user_ = 'danbaxin_admin'
-passwd_ = 'M0t0cr055!'
-dbSchema = 'danbaxin_WPZL5'
+host_ = host_address
+port_ = port_number
+user_ = user_id
+passwd_ = password
+dbSchema = db_name
 
 # *********************************
 # ****** SQL Query Functions ******
