@@ -1,5 +1,5 @@
 from bs4 import BeautifulSoup
-from p00_general_functions import *
+from scrappers import p00_general_functions
 
 
 def getEventLinks():
@@ -11,7 +11,7 @@ def getEventLinks():
     url = "https://www.supercrosslive.com/ama-supercross-historical-results"
 
     # Call function to scrape the web-page
-    page_html = scrapeHTML(url)
+    page_html = p00_general_functions.scrapeHTML(url)
 
     # Find the tables that contain the links to each event:
     link_tables = page_html.find_all(class_="table-historical-class")
