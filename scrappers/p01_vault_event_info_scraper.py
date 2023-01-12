@@ -1,4 +1,5 @@
 from bs4 import BeautifulSoup
+from ..private.sql_server import *
 import requests
 import pymysql
 from p00_general_functions import *
@@ -12,11 +13,11 @@ from dataclasses import dataclass
 # ****** SQL Server Settings ******
 # *********************************
 
-host_ = '50.87.249.222'
-port_ = int(3306)
-user_ = 'danbaxin_admin'
-passwd_ = 'M0t0cr055!'
-db_ = 'danbaxin_WPZL5'
+host_ = host_address
+port_ = port_number
+user_ = user_id
+passwd_ = password
+db_ = db_name
 
 # *********************************
 # ********* SQL Functions *********
