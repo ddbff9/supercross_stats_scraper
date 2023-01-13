@@ -1,8 +1,8 @@
 from bs4 import BeautifulSoup
-from ..private.sql_server import *
 import requests
 import pymysql
-from p00_general_functions import *
+from private import sql_server
+from scrappers import p00_general_functions
 
 '''
 This program loops over all the Supercross Events listed on https://www.supercrosslive.com/ama-supercross-historical-results. It pulls in the link to each event from the SQL Database and then scrapes the links from that event page.
@@ -15,11 +15,11 @@ The objective is to create a SQL Table with the eventID, raceID, and eventHref f
 # ****** SQL Server Settings ******
 # *********************************
 
-host_ = host_address
-port_ = port_number
-user_ = user_id
-passwd_ = password
-dbSchema = db_name
+host_ = sql_server.host_address
+port_ = sql_server.port_number
+user_ = sql_server.user_id
+passwd_ = sql_server.password
+dbSchema = sql_server.db_name
 
 # *********************************
 # ****** SQL Query Functions ******
@@ -115,23 +115,21 @@ def getResultsLinks(season, sessionName):
 
         # Result is stored in a tuple with only 1 value, thus extract that value and append to list:
         event_links.append(result[0])
-    
-    
 
     # Get the HTML from each page in event_links:
     for event in event_links:
 
         url = 'https://www.supercrosslive.com' + event
-        print(event)
+        # print(event)
         # Get the HTML from the event results page:
-        event_results_index = scrapeHTML(url)
+        event_results_index = p00_general_functions.scrapeHTML(url)
 
         try:
             # Get date of the event:
             eventDate = event_results_index.find(id='eventdates').string
 
             # Generate the event ID from the Date:
-            eventID = genPrimaryKey(eventDate)
+            eventID = p00_general_functions.genPrimaryKey(eventDate)
         except:
             print('Error!')
 
@@ -166,33 +164,33 @@ def getResultsLinks(season, sessionName):
                 # print()
 
 
-# *********************************
-# ********* Main Function *********
-# *********************************
+# # *********************************
+# # ********* Main Function *********
+# # *********************************
 
 
-print("This program will scrape links to Supercross Qualifying and ")
-print("racing results for Supercross races on SupercrossLive.com")
-print("and store this info in a SQL Database.\n")
+# print("This program will scrape links to Supercross Qualifying and ")
+# print("racing results for Supercross races on SupercrossLive.com")
+# print("and store this info in a SQL Database.\n")
 
-startYear = input("Enter Year (2013 to Present): ")
-print("\nNext enter a session that you would like to get results for,")
-print("here are some options:")
-print('    • entry list')
-print('    • Best Lap Times')
-print('    • Combined Qualifying Times')
-print('    • Fastest Segment Times')
-print('    • Individual Lap Times')
-print('    • Individual Segment Times')
-print('    • Lap Chart')
-print('    • Provisional Point Standings')
-print('    • Provisional Results')
-print('    • Standings')
-print('    • Starting Lineup')
-sessionDesc = input("\nEnter name of Session to get links for: ")
+# startYear = input("Enter Year (2013 to Present): ")
+# print("\nNext enter a session that you would like to get results for,")
+# print("here are some options:")
+# print('    • entry list')
+# print('    • Best Lap Times')
+# print('    • Combined Qualifying Times')
+# print('    • Fastest Segment Times')
+# print('    • Individual Lap Times')
+# print('    • Individual Segment Times')
+# print('    • Lap Chart')
+# print('    • Provisional Point Standings')
+# print('    • Provisional Results')
+# print('    • Standings')
+# print('    • Starting Lineup')
+# sessionDesc = input("\nEnter name of Session to get links for: ")
 
-print("\nAdding your links into database on your local server.\n")
+# print("\nAdding your links into database on your local server.\n")
 
-getResultsLinks(startYear, sessionDesc)
+# getResultsLinks(startYear, sessionDesc)
 
-print("\nCompleted! Your events should now be stored in the SQL Database.\n")
+# print("\nCompleted! Your events should now be stored in the SQL Database.\n")

@@ -16,9 +16,6 @@ def filterLinks(list):
   start = input_start_range.get()
   end = input_end_range.get()
 
-  print('Start:',start)
-  print('End:',end)
-
   for year in range(int(start),int(end)+1):
     for item in list:
       if item[0] == str(year):
@@ -30,11 +27,10 @@ def filterLinks(list):
 def showEventLinks():
   deleteDisplay()
   links = filterLinks(scrapeEventLinks())
-  updateDisplay(f"{'YEAR':7} {'ROUND':<8} {'NAME':<25} {'LINK':<50}")
+  updateDisplay(f" {'YEAR':7} {'ROUND':<8} {'NAME':<25} {'LINK':<50}")
   updateDisplay('-'*125)
   for link in links:
-    print(link)
-    updateDisplay(f"{link[0]:<9}{link[1]:<14}{link[2]:<30}{link[3]:<30}")
+    updateDisplay(f"{link[0]:<11}{link[1]:<15}{link[2]:<30}{link[3]:<30}")
 
 def deleteDisplay():
     display.delete(1.0, END)
