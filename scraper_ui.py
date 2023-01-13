@@ -7,23 +7,35 @@ ui = Tk()
 ui.title("Supercross Data Scraper")
 
 def scrapeEventLinks():
+  deleteDisplay()
+  updateDisplay(f"{'YEAR':7} {'ROUND':<8} {'NAME':<25} {'LINK':<50}")
   data = p02_sx_result_index_scraper.getEventLinks()
-  scraped_links = data['Links']
-  errors = data['Errors']
-
-  updateDisplay(f"Created {len(scraped_links)} links")
-
-  for error in errors:
-    updateDisplay(error)
+  for round in data:
+    year = input_start_range.get()
+    if round[0] == year:
+      round = round[1]
+      name = round[2]
+      link_url = round[3]
+      updateDisplay(f"{year:<9}{round:<14}{name:<30}{link_url:<30}")
   
-  return scraped_links
+  return data
 
 def showEventLinks():
   deleteDisplay()
   links = scrapeEventLinks()
   deleteDisplay()
+  updateDisplay(f"{'YEAR':7} {'ROUND':<8} {'NAME':<25} {'LINK':<50}")
+  updateDisplay('-'*125)
   for link in links:
-    updateDisplay(link[1])
+    year = link[0]
+    round = link[1]
+    name = link[2]
+    link_url = link[3]
+    updateDisplay(f"{year:<9}{round:<14}{name:<30}{link_url:<30}")
+
+# print(f"{'Location: ' + location:<25} Revision: {revision}")
+# print(f"{'District: ' + district:<25} Date: {date}")
+# print(f"{'User: ' + user:<25} Time: {time}")
 
 def deleteDisplay():
     display.delete(1.0, END)

@@ -3,49 +3,49 @@ from scrappers import p00_general_functions
 
 
 def getEventLinks():
-    # Create/Initialize lists to store output and any errors:
-    error_log = []
-    output = []
-
-    # Identify the web-page to scrape:
     url = "https://www.supercrosslive.com/ama-supercross-historical-results"
-
-    # Call function to scrape the web-page
     page_html = p00_general_functions.scrapeHTML(url)
 
-    # Find the tables that contain the links to each event:
+    # Two tables hold all links to supercross results since 2013:
     link_tables = page_html.find_all(class_="table-historical-class")
+
+    output = []
 
     # Loop over each table and parse event info:
     for table in link_tables:
-
         # Get list of link tags from table:
-        event_link_tags = table.find_all('a')
+        table_rows = table.find_all("tr")
+        for row in table_rows:
+            cells = row.find_all("td")
+            for cell in cells:
+                results_link = ''
+                link_text = ''
+                round_num = ''
+                round_location = ''
+                year = ''
+                year = cell.get('data-table-header')
 
-        # Loop over each event:
-        for event in event_link_tags:
-
-            # Parse out link text:
-            event_link = event.get('href')
-
-            # Check if its the current event, if it is skip:
-            if (event_link == '/current-event-results'):
-                pass
-            else:
-                event_year = event_link[-4:]
-                # Check if year is an int:
                 try:
-                    # If year is an int, store as such, otherwise add to error log:
-                    event_year = int(event_year)
+                    results_link = cell.find('a').get('href').strip()
+                    link_text = cell.find('a').text.replace(
+                        u'\xa0', u' ').strip(' ')
+                    round_location = link_text.split(
+                        '-')[1].replace(u'\xa0', u' ').strip(' ')
+                    round_num = link_text.split(
+                        '-')[0].replace(u'\xa0', u' ').strip(' ')
+                    if (results_link == "/current-event-results"):
+                        pass
+                    else:
+                        if results_link == '/event-results/05-anaheim-iii':
+                            year = '2013'
+                        if results_link == '/event-results/12-toronto':
+                            year = '2014'
+                        if year == None:
+                            year = results_link[-4:]
+
+                        output.append(
+                            [year, round_num, round_location, results_link])
                 except:
-                    error_text = f'Error: {event_link} does not have a valid year!'
-                    error_log.append(error_text)
                     pass
 
-                # append root of url to link to make full link path:
-                event_link = "https://www.supercrosslive.com" + event_link
-
-                # append result to the output list
-                output.append((event_year, event_link))
-
-    return {'Links': output, 'Errors': error_log}
+    return output
